@@ -39,8 +39,8 @@ struct FavouritesView: View {
             }
             .navigationTitle("Favourites")
         }
-        .onAppear {
-            viewModel.fetchFavourites(favourites)
+        .onChange(of: favourites) { newValue in
+            viewModel.fetchFavourites(newValue)
         }
     }
 }

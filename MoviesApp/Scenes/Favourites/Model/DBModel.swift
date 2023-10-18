@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Favourite: Codable, Identifiable {
+struct Favourite: Codable, Identifiable, Equatable {
     let id: String
     let movieID: Int
 }
