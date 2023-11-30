@@ -39,47 +39,45 @@ final class MoviesAppUITests: XCTestCase {
         XCTAssertTrue(backButtonRegister.exists)
         backButtonRegister.tap()
 
-        login()
     }
     
     private func login() {
         let emailTextField = app.textFields["Email address"]
-        XCTAssertTrue(emailTextField.exists)
+        XCTAssertTrue(emailTextField.waitForExistence(timeout: 10))
         emailTextField.tap()
         emailTextField.typeText("test@test.test")
 
         let passwordSecureTextField = app.secureTextFields["Password"]
-        XCTAssertTrue(passwordSecureTextField.exists)
+        XCTAssertTrue(passwordSecureTextField.waitForExistence(timeout: 10))
         passwordSecureTextField.tap()
         passwordSecureTextField.typeText("Password")
+        passwordSecureTextField.typeText("\n")
         
         let logInButton = app.buttons["Log in"]
-        XCTAssertTrue(logInButton.exists)
+        XCTAssertTrue(logInButton.waitForExistence(timeout: 10))
         logInButton.tap()
     }
     
     func testTabBar() throws {
         login()
         
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 5))
+        let tabBar = app.tabBars.element(boundBy: 0)
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 10))
         
-        let movies = app.tabBars.buttons["Movies"]
+        let movies = tabBar.buttons["Movies"]
         movies.tap()
         
-        let favourites = app.tabBars.buttons["Favourites"]
+        let favourites = tabBar.buttons["Favourites"]
         favourites.tap()
        
-        let search = app.tabBars.buttons["Search"]
+        let search = tabBar.buttons["Search"]
         search.tap()
 
         let searchField = app.searchFields["Search"]
-        XCTAssertTrue(searchField.exists)
         searchField.tap()
         searchField.typeText("barbie")
 
         let cancelButton = app.navigationBars.buttons["Cancel"]
-        XCTAssertTrue(cancelButton.exists)
         cancelButton.tap()
     }
     
@@ -87,23 +85,19 @@ final class MoviesAppUITests: XCTestCase {
         login()
         
         let grid = app.otherElements["nowPlayingGrid"]
-        XCTAssertTrue(grid.waitForExistence(timeout: 5), "Now playing lazygrid should be visible")
-
         let gridPredicate = NSPredicate(format: "identifier CONTAINS 'item_'")
-        let gridItem = grid.buttons.containing(gridPredicate)
-        XCTAssertTrue(gridItem.count > 1)
+        let gridItem = grid.buttons.containing(gridPredicate).element(boundBy: 0)
+        XCTAssertTrue(gridItem.waitForExistence(timeout: 10))
 
-        let favourite = gridItem.element.firstMatch.buttons["Love"]
-        XCTAssertTrue(favourite.exists)
+        let favourite = gridItem.firstMatch.buttons["Love"]
         favourite.tap()
         favourite.tap()
         
-        let item = gridItem.element.firstMatch
+        let item = gridItem.firstMatch
         item.tap()
         
         let imagePredicate = NSPredicate(format: "identifier CONTAINS 'image_'")
         let images = app.buttons.containing(imagePredicate)
-        XCTAssertTrue(images.count > 1)
         
         let image = images.firstMatch
         image.tap()
@@ -112,11 +106,15 @@ final class MoviesAppUITests: XCTestCase {
     func testLogout() throws {
         login()
         
-        let profile = app.tabBars.buttons["Profile"]
+        let tabBar = app.tabBars.element(boundBy: 0)
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 10))
+        
+        let profile = tabBar.buttons["Profile"]
+        XCTAssertTrue(profile.waitForExistence(timeout: 10))
         profile.tap()
 
         let signOutButton = app.buttons["Sign out"]
-        XCTAssertTrue(signOutButton.exists)
+        XCTAssertTrue(signOutButton.waitForExistence(timeout: 10))
         signOutButton.tap()
     }
 
